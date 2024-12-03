@@ -40,3 +40,25 @@ An intuitive appointment scheduler application that allows users to select a dat
 ---
 
 
+
+---
+
+## **Setup and Usage**
+
+### **Prerequisites**
+- Node.js installed on your system.
+
+### **Installation**
+
+## **Steps to Run the Application**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/appointment-scheduler.git
+
+
+2. cd appointment-scheduler
+
+3. npm start
+
+
