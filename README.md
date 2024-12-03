@@ -39,5 +39,4 @@ An intuitive appointment scheduler application that allows users to select a dat
 
 ---
 
-## **Project Structure**
 
