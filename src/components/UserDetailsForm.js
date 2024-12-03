@@ -1,32 +1,30 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppointmentContext } from "../context/AppointmentContext";
 
-const UserDetailsForm = ({ onSubmit }) => {
+const UserDetailsForm = ({ onSubmit, updateFormValidity }) => {
   const { userInfo, setUserInfo } = useContext(AppointmentContext);
   const [errors, setErrors] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
 
-  // Validation logic
-  const validate = () => {
+  const validate = (data) => {
     const newErrors = {};
-    if (!userInfo.name.trim()) {
+    if (!data.name.trim()) {
       newErrors.name = "Name is required.";
-    } else if (userInfo.name.trim().length < 3) {
+    } else if (data.name.trim().length < 3) {
       newErrors.name = "Name must be at least 3 characters.";
     }
-    if (!userInfo.phone) {
+    if (!data.phone) {
       newErrors.phone = "Phone number is required.";
-    } else if (!/^\d{10}$/.test(userInfo.phone)) {
+    } else if (!/^\d{10}$/.test(data.phone)) {
       newErrors.phone = "Phone number must be 10 digits.";
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
-  // Update form validity whenever userInfo changes
   useEffect(() => {
-    setIsFormValid(validate());
-  }, [userInfo]);
+    const errors = validate(userInfo);
+    setErrors(errors);
+    updateFormValidity(Object.keys(errors).length === 0);
+  }, [userInfo, updateFormValidity]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +33,7 @@ const UserDetailsForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
+    if (Object.keys(errors).length === 0) {
       onSubmit();
     }
   };
@@ -58,14 +56,13 @@ const UserDetailsForm = ({ onSubmit }) => {
           <input
             type="tel"
             name="phone"
-            max={10}
             placeholder="Phone Number"
             value={userInfo.phone}
             onChange={handleChange}
           />
           {errors.phone && <p className="error">{errors.phone}</p>}
         </div>
-        <button type="submit" disabled={!isFormValid}>
+        <button type="submit" disabled={Object.keys(errors).length > 0}>
           Confirm Appointment
         </button>
       </form>

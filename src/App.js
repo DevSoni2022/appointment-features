@@ -8,17 +8,46 @@ import "./App.css";
 
 const App = () => {
   const [step, setStep] = useState(1);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const resetToHome = () => {
+    setStep(1);
+  };
 
   return (
     <AppointmentProvider>
       <div className="App">
         {step === 1 && <DateSelector />}
         {step === 2 && <TimeSlotSelector />}
-        {step === 3 && <UserDetailsForm onSubmit={() => setStep(4)} />}
+        {step === 3 && (
+          <UserDetailsForm
+            onSubmit={() => setStep(4)}
+            updateFormValidity={setIsFormValid}
+          />
+        )}
         {step === 4 && <ConfirmationScreen />}
         <div className="prev-next">
-          {step > 1 && <button onClick={() => setStep(step - 1)}>Back</button>}
-          {step < 4 && <button onClick={() => setStep(step + 1)}>Next</button>}
+          {step > 1 && (
+            <button
+              onClick={() => {
+                if (step === 4) {
+                  resetToHome();
+                } else {
+                  setStep(step - 1);
+                }
+              }}
+            >
+              Back
+            </button>
+          )}
+          {step < 4 && (
+            <button
+              onClick={() => setStep(step + 1)}
+              disabled={step === 3 && !isFormValid}
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
     </AppointmentProvider>
